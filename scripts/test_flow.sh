@@ -20,7 +20,7 @@ if [[ ! -f "$TEST_FILE" ]]; then
   error_exit "Testdatei fehlt: $TEST_FILE"
 fi
 
-OBJECT_KEY="test.jpg"c
+OBJECT_KEY="test.jpg"
 RESULT_KEY="${RESULT_PREFIX}/${OBJECT_KEY}.json"
 
 log_info "Lade Testbild nach s3://${IN_BUCKET_NAME}/${OBJECT_KEY} hoch..."
