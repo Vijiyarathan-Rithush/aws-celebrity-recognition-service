@@ -1,0 +1,11 @@
+{
+  "LambdaFunctionConfigurations": [
+    {
+      "Id": "InvokeLambdaOnObjectCreated",
+      "LambdaFunctionArn": "PLACEHOLDER_LAMBDA_ARN",
+      "Events": [
+        "s3:ObjectCreated:*"
+      ]
+    }
+  ]
+}
