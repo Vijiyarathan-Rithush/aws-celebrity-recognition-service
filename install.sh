@@ -22,7 +22,6 @@ log_success "AWS CLI is configured correctly"
 echo
 
 source scripts/setup_buckets.sh
-# source scripts/setup_iam.sh
 source scripts/deploy_lambda.sh
 source scripts/setup_trigger.sh
 
