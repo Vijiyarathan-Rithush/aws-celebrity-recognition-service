@@ -14,8 +14,6 @@ source scripts/utils.sh
 TEST_FILE="examples/test.jpg"
 RESULT_PREFIX="results"
 
-log_step "End-to-End Test – S3 → Lambda → S3"
-
 require_cmd aws
 
 if [[ ! -f "$TEST_FILE" ]]; then
