@@ -16,12 +16,7 @@ mkdir -p "$BUILD_DIR"
 )
 log_success "Zip erstellt: $ZIP_FILE"
 
-ROLE_ARN="$(
-  aws_cmd iam get-role \
-    --role-name "$ROLE_NAME" \
-    --query 'Role.Arn' \
-    --output text
-)"
+ROLE_ARN="$LAMBDA_ROLE_ARN"
 
 if aws_cmd lambda get-function --function-name "$LAMBDA_NAME" >/dev/null 2>&1; then
   log_info "Lambda '$LAMBDA_NAME' existiert – aktualisiere Code..."

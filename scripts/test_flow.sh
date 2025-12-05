@@ -3,6 +3,7 @@
 # Date:   2025-12-05
 # Desc:   DESCRIPTION
 
+
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -16,13 +17,12 @@ RESULT_PREFIX="results"
 log_step "End-to-End Test – S3 → Lambda → S3"
 
 require_cmd aws
-require_cmd jq
 
 if [[ ! -f "$TEST_FILE" ]]; then
   error_exit "Testdatei fehlt: $TEST_FILE"
 fi
 
-OBJECT_KEY="test.jpg"
+OBJECT_KEY="test.jpg"c
 RESULT_KEY="${RESULT_PREFIX}/${OBJECT_KEY}.json"
 
 log_info "Lade Testbild nach s3://${IN_BUCKET_NAME}/${OBJECT_KEY} hoch..."
@@ -50,9 +50,9 @@ if [[ "$FOUND" -ne 1 ]]; then
   error_exit "Kein Resultat gefunden nach $((MAX_TRIES * SLEEP_SECONDS)) Sekunden."
 fi
 
-log_success "Resultat gefunden. Lade JSON und zeige Inhalt:"
+log_success "Resultat gefunden. JSON Inhalt:"
 
-aws_cmd s3 cp "s3://${OUT_BUCKET_NAME}/${RESULT_KEY}" - | jq '.'
+aws_cmd s3 cp "s3://${OUT_BUCKET_NAME}/${RESULT_KEY}" - 
+echo
 
 log_success "Testlauf abgeschlossen."
- 

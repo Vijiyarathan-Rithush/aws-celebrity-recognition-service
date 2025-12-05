@@ -7,7 +7,7 @@
 AWS_REGION="us-east-1"
 
 # CONSTANTS
-IN_BUCKET_NAME="face-recognition-in"
-OUT_BUCKET_NAME="face-recognition-out"
+IN_BUCKET_NAME="vijiyarathan-memeti-face-recognition-in"
+OUT_BUCKET_NAME="vijiyarathan-memeti-face-recognition-out"
 LAMBDA_NAME="face-recognition-lambda"
-ROLE_NAME="face-recognition-role"
+LAMBDA_ROLE_ARN="arn:aws:iam::654654279869:role/LabRole"

@@ -1,4 +1,3 @@
-#!/bin/bash
 # Author: Memeti Rejan
 # Date:   2025-12-05
 # Desc:   DESCRIPTION
@@ -14,7 +13,7 @@ logger.setLevel(logging.INFO)
 s3 = boto3.client("s3")
 rekognition = boto3.client("rekognition")
 
-OUT_BUCKET_NAME = "face-recognition-out"
+OUT_BUCKET_NAME = "vijiyarathan-memeti-face-recognition-out"
 
 
 def lambda_handler(event, context):
