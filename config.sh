@@ -21,7 +21,7 @@ echo ""
 if [ -f "$CONFIG_FILE" ]; then
     echo "A configuration file already exists."
     source "$CONFIG_FILE"
-    read -p "Use existing config (u) or create a new one (n)? [u/n]: " CHOICE
+    read -p "Use existing config (u or Enter) or create a new one (n)? [u/n]: " CHOICE
 else
     echo "No configuration found. Creating a new one."
     CHOICE="n"
