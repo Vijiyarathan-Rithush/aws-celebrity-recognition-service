@@ -1,8 +1,7 @@
 #!/bin/bash
 # Author: Vijiyarathan Rithush
 # Date:   2025-12-05
-# Desc:   Installs and deploys
-
+# Desc:   Runs system checks and performs the full installation workflow, including bucket setup, Lambda deployment, and trigger configuration.
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"

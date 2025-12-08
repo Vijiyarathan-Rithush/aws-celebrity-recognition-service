@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Vijiyarathan Rithush
 # Date:   2025-12-05
-# Desc:   Configuration AWS
+# Desc:   Central configuration file defining AWS region, bucket names, Lambda settings, and IAM role used by all scripts.
 
 # REGION
 AWS_REGION="us-east-1"

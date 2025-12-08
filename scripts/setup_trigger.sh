@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Vijiyarathan Rithush
 # Date:   2025-12-05
-# Desc:   Trigger
+# Desc:   Configures the S3 event trigger that invokes the Lambda function whenever a new object is uploaded to the input bucket.
 
 log_step "4/4 – S3 Trigger setzen"
 

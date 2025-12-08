@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Vijiyarathan Rithush
 # Date:   2025-12-05
-# Desc:   Creates Buckets
+# Desc:   Creates and configures the required S3 buckets for the service, including region-aware bucket creation.
 
 log_step "1/4 – S3 Buckets einrichten"
 
