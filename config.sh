@@ -2,9 +2,17 @@
 # Author: Vijiyarathan Rithush
 # Date:   2025-12-05
 # Desc:   Central configuration file defining AWS region, bucket names, Lambda settings, and IAM role used by all scripts.
+
 set -euo pipefail
 
 CONFIG_FILE="config.env"
+
+AWS_REGION="${AWS_REGION:-BUCKET-REGION}"
+IN_BUCKET_NAME="${IN_BUCKET_NAME:-BUCKET-INPUT-NAME}"
+OUT_BUCKET_NAME="${OUT_BUCKET_NAME:-BUCKET-OUTPUT-NAME}"
+LAMBDA_NAME="${LAMBDA_NAME:-LAMBDA-NAME}"
+LAMBDA_ROLE_ARN="${LAMBDA_ROLE_ARN:-LAMBDA_ROLE_ARN}"
+
 
 echo "=== Face Recognition Installer ==="
 echo ""
