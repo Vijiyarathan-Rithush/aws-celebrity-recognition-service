@@ -90,3 +90,41 @@ chmod +x install.sh
 └── README.md      # This documentation
 ```
 
+---
+
+### Example Output
+A sample JSON output from the Lambda function:
+
+```json
+{
+  "source_bucket": "vijiyarathan-memeit-in2",
+  "source_key": "test.jpg",
+  "celebrities": [
+    {
+      "name": "Dwayne Johnson",
+      "match_confidence": 99.99396514892578
+    }
+  ]
+}
+```
+
+---
+
+```bash
+bash scripts/test_flow.sh
+```
+
+You should see the name of the detected celebrity and confidence score in your terminal.
+
+---
+
+## Authors
+
+- Memeti Rejan
+- Vijiyarathan Rithush
+
+---
+
+## Notes
+This project was developed as part of the **M346 Cloud Module** at **GBSSG St. Gallen** (Switzerland).
+It aims to give hands-on experience with AWS Rekogntion and automation best practices.
