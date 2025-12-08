@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Vijiyarathan Rithush
 # Date:   2025-12-05
-# Desc:   Utilities like colors and everything
+# Desc:   Provides reusable logging, error handling, command checks, and AWS wrapper utilities for all project scripts.
 
 # ANSI color
 RED="\033[0;31m"

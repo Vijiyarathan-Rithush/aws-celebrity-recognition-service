@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Memeti Rejan
 # Date:   2025-12-05
-# Desc:   DESCRIPTION
+# Desc:   Deploys or updates an AWS Lambda function by packaging the source code and applying the latest changes.
 
 log_step "3/4 – Lambda deployen"
 

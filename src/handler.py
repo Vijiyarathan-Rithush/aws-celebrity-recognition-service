@@ -1,6 +1,6 @@
 # Author: Memeti Rejan
 # Date:   2025-12-05
-# Desc:   DESCRIPTION
+# Desc:   Detects celebrities in an uploaded S3 image using Amazon Rekognition and writes the analysis result back to S3.
 
 import json
 import logging

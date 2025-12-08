@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Memeti Rejan
 # Date:   2025-12-05
-# Desc:   DESCRIPTION
+# Desc:   Runs an automatedb test by uploading a sample file to S3 and waiting for the processed result.
 
 
 set -euo pipefail
