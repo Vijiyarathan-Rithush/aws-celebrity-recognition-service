@@ -7,6 +7,8 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 source config.sh
+export OUT_BUCKET_NAME
+echo $OUT_BUCKET_NAME
 source scripts/utils.sh
 
 log_step "System-Checks"

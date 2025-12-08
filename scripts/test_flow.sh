@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Memeti Rejan
 # Date:   2025-12-05
-# Desc:   Runs an automatedb test by uploading a sample file to S3 and waiting for the processed result.
+# Desc:   Runs an automated test by uploading a sample file to S3 and waiting for the processed result.
 
 
 set -euo pipefail
@@ -23,14 +23,14 @@ fi
 OBJECT_KEY="test.jpg"
 RESULT_KEY="${RESULT_PREFIX}/${OBJECT_KEY}.json"
 
-log_info "Lade Testbild nach s3://${IN_BUCKET_NAME}/${OBJECT_KEY} hoch..."
+log_info "Lade Testbild nach s3://${IN_BUCKET_NAME}/${OBJECT_KEY} hoch"
 aws_cmd s3 cp "$TEST_FILE" "s3://${IN_BUCKET_NAME}/${OBJECT_KEY}"
 log_success "Upload abgeschlossen."
 
-log_info "Warte auf Resultat in s3://${OUT_BUCKET_NAME}/${RESULT_KEY}..."
+log_info "Warte auf Resultat in s3://${OUT_BUCKET_NAME}/${RESULT_KEY}"
 
 MAX_TRIES=20
-SLEEP_SECONDS=3
+SLEEP_SECONDS=1
 FOUND=0
 
 for ((i=1; i<=MAX_TRIES; i++)); do
@@ -40,7 +40,7 @@ for ((i=1; i<=MAX_TRIES; i++)); do
     FOUND=1
     break
   fi
-  log_info "Noch kein Ergebnis, Versuch $i/${MAX_TRIES}..."
+  log_info "Noch kein Ergebnis, Versuch $i/${MAX_TRIES}"
   sleep "$SLEEP_SECONDS"
 done
 
