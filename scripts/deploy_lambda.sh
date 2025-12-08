@@ -1,7 +1,13 @@
 #!/bin/bash
 # Author: Memeti Rejan
-# Date:   2025-12-05
-# Desc:   Deploys or updates an AWS Lambda function by packaging the source code and applying the latest changes.
+# Date:   2025-12-08
+# Desc:   Deploys or updates the Lambda function using environment variables from install.sh
+
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+source scripts/utils.sh
 
 log_step "3/4 – Lambda deployen"
 
@@ -16,24 +22,33 @@ mkdir -p "$BUILD_DIR"
 )
 log_success "Zip erstellt: $ZIP_FILE"
 
+ENV_JSON="{\"Variables\":{\"IN_BUCKET_NAME\":\"$IN_BUCKET_NAME\",\"OUT_BUCKET_NAME\":\"$OUT_BUCKET_NAME\",\"LAMBDA_NAME\":\"$LAMBDA_NAME\"}}"
 ROLE_ARN="$LAMBDA_ROLE_ARN"
 
+# Deploy or update Lambda
 if aws_cmd lambda get-function --function-name "$LAMBDA_NAME" >/dev/null 2>&1; then
-  log_info "Lambda '$LAMBDA_NAME' existiert – aktualisiere Code..."
-  aws_cmd lambda update-function-code \
-    --function-name "$LAMBDA_NAME" \
-    --zip-file "fileb://$ZIP_FILE" >/dev/null
-  log_success "Lambda-Code aktualisiert."
+    log_info "Lambda '$LAMBDA_NAME' existiert – aktualisiere Code..."
+    aws_cmd lambda update-function-code \
+        --function-name "$LAMBDA_NAME" \
+        --zip-file "fileb://$ZIP_FILE" >/dev/null
+
+    log_info "Aktualisiere Lambda-Environment-Variablen..."
+    aws_cmd lambda update-function-configuration \
+        --function-name "$LAMBDA_NAME" \
+        --environment "$ENV_JSON" >/dev/null
+
+    log_success "Lambda-Code und Environment-Variablen aktualisiert."
 else
-  log_info "Erstelle Lambda '$LAMBDA_NAME'..."
-  aws_cmd lambda create-function \
-    --function-name "$LAMBDA_NAME" \
-    --runtime python3.11 \
-    --handler handler.lambda_handler \
-    --role "$ROLE_ARN" \
-    --timeout 30 \
-    --memory-size 256 \
-    --zip-file "fileb://$ZIP_FILE" >/dev/null
-  log_success "Lambda erstellt."
+    log_info "Erstelle Lambda '$LAMBDA_NAME'..."
+    aws_cmd lambda create-function \
+        --function-name "$LAMBDA_NAME" \
+        --runtime python3.11 \
+        --handler handler.lambda_handler \
+        --role "$ROLE_ARN" \
+        --timeout 30 \
+        --memory-size 256 \
+        --zip-file "fileb://$ZIP_FILE" \
+        --environment "$ENV_JSON" >/dev/null
+
+    log_success "Lambda erstellt mit Environment-Variablen."
 fi
- 

@@ -4,7 +4,7 @@
 
 import json
 import logging
-
+import os
 import boto3
 
 logger = logging.getLogger()
@@ -13,52 +13,50 @@ logger.setLevel(logging.INFO)
 s3 = boto3.client("s3")
 rekognition = boto3.client("rekognition")
 
-OUT_BUCKET_NAME = "vijiyarathan-memeti-face-recognition-out"
+# From config.env
+OUT_BUCKET_NAME = os.environ.get("OUT_BUCKET_NAME")
 
 
 def lambda_handler(event, context):
-    
-    logger.info("Ereignis erhalten: %s", json.dumps(event))
+    logger.info("Event received: %s", json.dumps(event))
 
     records = event.get("Records", [])
     if not records:
-        logger.warning("Keine Records im Event.")
-        return {"statusCode": 400, "body": "Keine Records im Event"}
+        logger.warning("No S3 records found in event.")
+        return {"statusCode": 400, "body": "No S3 records found"}
 
-    rec = records[0]
-    s3_info = rec.get("s3", {})
+    record = records[0]
+    s3_info = record.get("s3", {})
+
     bucket = s3_info.get("bucket", {}).get("name")
     key = s3_info.get("object", {}).get("key")
 
-    logger.info("Verarbeite Datei: s3://%s/%s", bucket, key)
+    logger.info("Processing file: s3://%s/%s", bucket, key)
 
-    
+    # Rekognition celebrity detection
     response = rekognition.recognize_celebrities(
         Image={"S3Object": {"Bucket": bucket, "Name": key}}
     )
 
-    celebs = []
-    for c in response.get("CelebrityFaces", []):
-        celebs.append(
-            {
-                "name": c.get("Name"),
-                "match_confidence": c.get("MatchConfidence"),
-            }
-        )
+    celebrities = [
+        {
+            "name": celeb.get("Name"),
+            "match_confidence": celeb.get("MatchConfidence"),
+        }
+        for celeb in response.get("CelebrityFaces", [])
+    ]
 
     result = {
         "source_bucket": bucket,
         "source_key": key,
-        "celebrities": celebs,
+        "celebrities": celebrities,
     }
 
-    # Ziel-Key: results/<filename>.json
-    base_name = key.rsplit("/", 1)[-1]  
+    # Write JSON to: results/<filename>.json
+    base_name = key.split("/")[-1]
     json_key = f"results/{base_name}.json"
 
-    logger.info(
-        "Schreibe Resultat nach s3://%s/%s", OUT_BUCKET_NAME, json_key
-    )
+    logger.info("Writing result to s3://%s/%s", OUT_BUCKET_NAME, json_key)
 
     s3.put_object(
         Bucket=OUT_BUCKET_NAME,
@@ -71,9 +69,8 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps(
             {
-                "message": "Analyse abgeschlossen",
+                "message": "Celebrity detection complete",
                 "output_key": json_key,
             }
         ),
     }
- 
