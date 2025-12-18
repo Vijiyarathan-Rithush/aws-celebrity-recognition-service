@@ -20,7 +20,7 @@ shopt -s nullglob
 TEST_FILES=("$EXAMPLES_DIR"/*)
 
 if [[ ${#TEST_FILES[@]} -eq 0 ]]; then
-  error_exit "no testimages found in: $EXAMPLES_DIR"
+  error_exit "no test images found in: $EXAMPLES_DIR"
 fi
 
 MAX_TRIES=20
