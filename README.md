@@ -22,7 +22,6 @@ The project is designed for students or developers who want a clean and fast int
 ```bash
 ./install.sh
 ```
-
 - Creates S3 buckets
 - Deploys the lambda function
 - Sets up event triggers
@@ -72,6 +71,8 @@ This ensures that your setup is customized and repeatable — no need for manual
 
 ```bash
 chmod +x install.sh
+chmod +x scripts/*
+chmod +x tests.sh
 ./install.sh
 ```
 
@@ -85,8 +86,10 @@ chmod +x install.sh
 ├── iam/           # IAM policies and trust relationships
 ├── scripts/       # Shell scripts for setup, deployment, testing
 ├── src/           # Lambda source code
+├── .gitignore     # Shell helper config
 ├── config.env     # Environment configuration
 ├── config.sh      # Shell helper config
+├── install.sh     # Shell helper config
 └── README.md      # This documentation
 ```
 
