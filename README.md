@@ -30,6 +30,8 @@ The project is designed for students or developers who want a clean and fast int
 
 ### 🧠 Architecture
 
+![Architecture Diagram](assets/Architecture.png)
+
 **1. Upload**
 - A user uploads an image to the input bucket.
 
