@@ -11,13 +11,15 @@ AWS_REGION="${AWS_REGION:-BUCKET-REGION}"
 IN_BUCKET_NAME="${IN_BUCKET_NAME:-BUCKET-INPUT-NAME}"
 OUT_BUCKET_NAME="${OUT_BUCKET_NAME:-BUCKET-OUTPUT-NAME}"
 LAMBDA_NAME="${LAMBDA_NAME:-LAMBDA-NAME}"
-LAMBDA_ROLE_ARN="${LAMBDA_ROLE_ARN:-LAMBDA_ROLE_ARN}"
 
+ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+LAMBDA_ROLE_ARN_DEFAULT="arn:aws:iam::${ACCOUNT_ID}:role/LabRole"
+
+LAMBDA_ROLE_ARN="${LAMBDA_ROLE_ARN:-$LAMBDA_ROLE_ARN_DEFAULT}"
 
 echo "=== Face Recognition Installer ==="
 echo ""
 
-# 1. Load existing configuration if present
 if [ -f "$CONFIG_FILE" ]; then
     echo "A configuration file already exists."
     source "$CONFIG_FILE"
@@ -27,7 +29,6 @@ else
     CHOICE="n"
 fi
 
-# 2. Prompt for configuration values
 if [[ "$CHOICE" = "n" ]]; then
     echo ""
     echo "Please enter the configuration values (press Enter to keep defaults):"
@@ -47,7 +48,6 @@ if [[ "$CHOICE" = "n" ]]; then
     read -p "Lambda Role ARN [$LAMBDA_ROLE_ARN]: " INPUT
     LAMBDA_ROLE_ARN="${INPUT:-$LAMBDA_ROLE_ARN}"
 
-    # Save to config file
     cat > "$CONFIG_FILE" <<EOF
 AWS_REGION="$AWS_REGION"
 IN_BUCKET_NAME="$IN_BUCKET_NAME"
@@ -60,11 +60,9 @@ EOF
     echo "Configuration saved to $CONFIG_FILE"
     echo ""
 else
-    # Use existing configuration
     echo ""
 fi
 
-# 3. Show values being used
 echo "Using configuration:"
 echo "Region:        $AWS_REGION"
 echo "Input Bucket:  $IN_BUCKET_NAME"
@@ -75,4 +73,3 @@ echo ""
 
 echo "Starting deployment..."
 echo ""
-
