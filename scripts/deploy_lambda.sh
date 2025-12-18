@@ -9,37 +9,37 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 source scripts/utils.sh
 
-log_step "3/4 – Lambda deployen"
+log_step "3/4 – depolying lambda"
 
 BUILD_DIR="build"
 ZIP_FILE="$BUILD_DIR/lambda.zip"
 
-log_info "Erzeuge Lambda-Zip..."
+log_info "creating lambda.zip"
 mkdir -p "$BUILD_DIR"
 (
   cd src || exit 1
   zip -q -r "../$ZIP_FILE" .
 )
-log_success "Zip erstellt: $ZIP_FILE"
+log_success "Zip created: $ZIP_FILE"
 
 ENV_JSON="{\"Variables\":{\"IN_BUCKET_NAME\":\"$IN_BUCKET_NAME\",\"OUT_BUCKET_NAME\":\"$OUT_BUCKET_NAME\",\"LAMBDA_NAME\":\"$LAMBDA_NAME\"}}"
 ROLE_ARN="$LAMBDA_ROLE_ARN"
 
 # Deploy or update Lambda
 if aws_cmd lambda get-function --function-name "$LAMBDA_NAME" >/dev/null 2>&1; then
-    log_info "Lambda '$LAMBDA_NAME' existiert – aktualisiere Code..."
+    log_info "lambda '$LAMBDA_NAME' already exists - updating code..."
     aws_cmd lambda update-function-code \
         --function-name "$LAMBDA_NAME" \
         --zip-file "fileb://$ZIP_FILE" >/dev/null
 
-    log_info "Aktualisiere Lambda-Environment-Variablen..."
+    log_info "updating lambda enviroment settings"
     aws_cmd lambda update-function-configuration \
         --function-name "$LAMBDA_NAME" \
         --environment "$ENV_JSON" >/dev/null
 
-    log_success "Lambda-Code und Environment-Variablen aktualisiert."
+    log_success "lambda code and enviroment settings updated"
 else
-    log_info "Erstelle Lambda '$LAMBDA_NAME'..."
+    log_info "creating lambda '$LAMBDA_NAME'..."
     aws_cmd lambda create-function \
         --function-name "$LAMBDA_NAME" \
         --runtime python3.11 \
@@ -50,5 +50,5 @@ else
         --zip-file "fileb://$ZIP_FILE" \
         --environment "$ENV_JSON" >/dev/null
 
-    log_success "Lambda erstellt mit Environment-Variablen."
+    log_success "lambda created with enviroment variables"
 fi
