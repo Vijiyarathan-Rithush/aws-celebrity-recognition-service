@@ -3,12 +3,12 @@
 # Date:   2025-12-05
 # Desc:   Configures the S3 event trigger that invokes the Lambda function whenever a new object is uploaded to the input bucket.
 
-log_step "4/4 – setting up S3 Trigger"
+log_step "4/4 – setting up S3 trigger"
 
 TEMPLATE="iam/s3-trigger.json"
 
 if ! [[ -f "$TEMPLATE" ]]; then
-  error_exit "Trigger-Template missing: $TEMPLATE"
+  error_exit "trigger template missing: $TEMPLATE"
 fi
 
 LAMBDA_ARN="$(
@@ -18,7 +18,7 @@ LAMBDA_ARN="$(
     --output text
 )"
 
-log_info "using Lambda-ARN: $LAMBDA_ARN"
+log_info "using lambda-ARN: $LAMBDA_ARN"
 
 # S3 braucht eine explizite Berechtigung, um die Lambda aufzurufen
 ACCOUNT_ID="$(
@@ -44,10 +44,10 @@ TMP_FILE="$(mktemp)"
 # Platzhalter in Template ersetzen
 sed "s#PLACEHOLDER_LAMBDA_ARN#$LAMBDA_ARN#g" "$TEMPLATE" > "$TMP_FILE"
 
-log_info "setze Notification-Konfiguration für Bucket '$IN_BUCKET_NAME'..."
+log_info "setting notification configuration in '$IN_BUCKET_NAME'..."
 aws_cmd s3api put-bucket-notification-configuration \
   --bucket "$IN_BUCKET_NAME" \
   --notification-configuration "file://$TMP_FILE"
 
 rm -f "$TMP_FILE"
-log_success "S3-Trigger setup done"
+log_success "S3 trigger setup done"
