@@ -42,7 +42,7 @@ error_exit() {
 require_cmd() {
   local cmd="$1"
   if ! command -v "$cmd" >/dev/null 2>&1; then
-    error_exit "Benötigtes Kommando '$cmd' wurde nicht gefunden."
+    error_exit "Command '$cmd' not found"
   fi
 }
 
