@@ -2,6 +2,10 @@
 # Author: Vijiyarathan Rithush
 # Date:   2025-12-05
 # Desc:   Central configuration file defining AWS region, bucket names, Lambda settings, and IAM role used by all scripts.
+#!/bin/bash
+# Author: Vijiyarathan Rithush
+# Date:   2025-12-05
+# Desc:   Central configuration file defining AWS region, bucket names, Lambda settings, and IAM role used by all scripts.
 
 set -euo pipefail
 
@@ -14,22 +18,16 @@ LAMBDA_NAME="${LAMBDA_NAME:-LAMBDA-NAME}"
 
 ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 LAMBDA_ROLE_ARN_DEFAULT="arn:aws:iam::${ACCOUNT_ID}:role/LabRole"
-
 LAMBDA_ROLE_ARN="${LAMBDA_ROLE_ARN:-$LAMBDA_ROLE_ARN_DEFAULT}"
 
 echo "=== Face Recognition Installer ==="
 echo ""
 
-if [ -f "$CONFIG_FILE" ]; then
-    echo "A configuration file already exists."
+if [[ -f "$CONFIG_FILE" ]]; then
+    echo "Using existing configuration from $CONFIG_FILE"
     source "$CONFIG_FILE"
-    read -p "Use existing config (u | Enter) or create a new one (n)? [u | Enter | n]: " CHOICE
 else
     echo "No configuration found. Creating a new one."
-    CHOICE="n"
-fi
-
-if [[ "$CHOICE" = "n" ]]; then
     echo ""
     echo "Please enter the configuration values (press Enter to keep defaults):"
 
@@ -59,8 +57,6 @@ EOF
     echo ""
     echo "Configuration saved to $CONFIG_FILE"
     echo ""
-else
-    echo ""
 fi
 
 echo "Using configuration:"
@@ -73,3 +69,5 @@ echo ""
 
 echo "Starting deployment..."
 echo ""
+
+export AWS_REGION IN_BUCKET_NAME OUT_BUCKET_NAME LAMBDA_NAME LAMBDA_ROLE_ARN
