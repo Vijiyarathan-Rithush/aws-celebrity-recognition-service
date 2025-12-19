@@ -84,18 +84,28 @@ You do **not** need to manually edit `config.env`.
 
 On the **first run**, the configuration loader `config.sh` will ask you once for:
 
-- AWS region
-- Input bucket name
-- Output bucket name
-- Lambda function name
-- Lambda role ARN (default `arn:aws:iam::<your-account-id>:role/LabRole`)
+- AWS region  
+- Input bucket name  
+- Output bucket name  
+- Lambda function name  
 
-These values are stored in `config.env`.
+The Lambda role ARN is **automatically retrieved** from the current AWS CLI session (default: `LabRole`).  
+All these values are stored in `config.env`.
 
 On **all later runs**:
 
 - `config.sh` just loads `config.env`
-- No more prompts → scripts and tests can run fully automated
+- No more prompts → all scripts and tests run fully automated
+
+#### 🧾 Example input on first run
+
+```bash
+> Enter your AWS Region [e.g. eu-central-1]: eu-central-1
+> Input S3 Bucket name: face-recognition-input-2025
+> Output S3 Bucket name: face-recognition-output-2025
+> Lambda Function name: recognize-celebrities
+> Using IAM Role: arn:aws:iam::123456789012:role/LabRole
+```
 
 ### 3. Run Setup
 
