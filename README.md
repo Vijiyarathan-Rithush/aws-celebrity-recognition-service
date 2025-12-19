@@ -23,7 +23,7 @@ The project is designed for students or developers who want a clean and fast int
 ./install.sh
 ```
 - Creates S3 buckets (input and output)
-- Deploys the lambda function
+- Deploys the Lambda function
 - Sets up event triggers
 - Configures required IAM roles
 - Is repeatable and safe to run multiple times
@@ -78,7 +78,34 @@ git clone https://github.com/Vijiyarathan-Rithush/aws-celebrity-recognition-serv
 cd aws-celebrity-recognition-service
 ```
 
-### 2. Configuration
+### 2. Run Setup
+
+```bash
+chmod +x install.sh
+chmod +x scripts/*
+chmod +x tests.sh
+chmod +x edit_config.sh
+
+./install.sh
+```
+
+#### 🧾 Example input on first run
+
+```bash
+> Enter your AWS Region [e.g. eu-central-1]: eu-central-1
+> Input S3 Bucket name: face-recognition-input-2025
+> Output S3 Bucket name: face-recognition-output-2025
+> Lambda Function name: recognize-celebrities
+> Using IAM Role: arn:aws:iam::123456789012:role/LabRole
+```
+
+This will:
+- Verify AWS CLI configuration
+- Create or reuse the S3 buckets
+- Set the `OUT_BUCKET` environment variable for the Lambda
+- Configure the S3 event trigger on the input bucket
+
+### 3. Configuration
 
 You do **not** need to manually edit `config.env`.
 
@@ -97,37 +124,16 @@ On **all later runs**:
 - `config.sh` just loads `config.env`
 - No more prompts → all scripts and tests run fully automated
 
-#### 🧾 Example input on first run
-
-```bash
-> Enter your AWS Region [e.g. eu-central-1]: eu-central-1
-> Input S3 Bucket name: face-recognition-input-2025
-> Output S3 Bucket name: face-recognition-output-2025
-> Lambda Function name: recognize-celebrities
-> Using IAM Role: arn:aws:iam::123456789012:role/LabRole
-```
-
-### 3. Run Setup
-
-```bash
-chmod +x install.sh
-chmod +x scripts/*
-chmod +x tests.sh
-
-./install.sh
-```
-
-This will:
-- Verify AWS CLI configuration
-- Create or reuse the S3 buckets
-- Set the `OUT_BUCKET` environment variable for the Lambda
-- Configure the S3 event trigger on the input bucket
+#### Editing the configuration later
+If you need to change any configuration values after the initial setup, use the helper script:
+- Run `./edit_config.sh`
+- This opens an interactive editor to modify the existing configuration stored in `config.env` without recreating it
 
 ## Directory Structure
 
 ```bash
 .
-├── build/         # Lambda build artifacts (lambda.zip, etc.)
+├── build/         # Lambda build artifacts (Lambda.zip, etc.)
 ├── docs/          # Test reports (protocols.md) and screenshots
 ├── img/           # Sample images for testing (Brad.jpeg, TC.jpeg, ...)
 ├── iam/           # IAM policies and S3 trigger config
@@ -186,10 +192,6 @@ A sample JSON output from the Lambda function:
 ```
 
 ---
-
-```bash
-bash scripts/test_flow.sh
-```
 
 You should see the name of the detected celebrity and confidence score in your terminal.
 
