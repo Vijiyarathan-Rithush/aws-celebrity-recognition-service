@@ -15,7 +15,8 @@ The project is designed for students or developers who want a clean and fast int
 - Upload any image to the `input` S3 bucket
 - A Lambda function is triggered automatically
 - The function uses **Amazon Rekognition** to detect celebrities
-- Results are saved as a `.json` file in the `output` S3 bucket
+- Results are saved as JSON in the output S3 bucket. Each event record is processed,
+  and the result preserves the input object's key under `results/`.
 
 ### ⚙️ Full CLI Automation
 
@@ -63,7 +64,8 @@ The project is designed for students or developers who want a clean and fast int
 
 ## Requirements
 
-- AWS CLI (configured with credentials)
+- AWS CLI v2 (configured with credentials)
+- Bash and `zip`
 - AWS IAM permissions (S3, Lambda, Rekognition)
 - Git
 
@@ -149,6 +151,15 @@ If you need to change any configuration values after the initial setup, use the 
 ---
 
 ## Testing
+
+Run the handler tests locally with Python 3.14 and without AWS credentials:
+
+```bash
+python -m unittest discover -s tests
+```
+
+The Lambda deployment uses the Python 3.14 runtime. The shell integration tests
+below use real AWS resources in the configured account.
 For automated testing, a central script called `tests.sh` is used. This script runs all important tests in a fixed order and generates a test report in `docs/protocols.md`.
 
 The following test cases are executed:
