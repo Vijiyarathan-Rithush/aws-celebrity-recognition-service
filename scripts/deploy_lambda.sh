@@ -9,7 +9,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 source scripts/utils.sh
 
-log_step "3/4 – depolying lambda"
+log_step "3/4 – deploying lambda"
 
 BUILD_DIR="build"
 ZIP_FILE="$BUILD_DIR/lambda.zip"
@@ -24,6 +24,7 @@ log_success "Zip created: $ZIP_FILE"
 
 ENV_JSON="{\"Variables\":{\"IN_BUCKET_NAME\":\"$IN_BUCKET_NAME\",\"OUT_BUCKET_NAME\":\"$OUT_BUCKET_NAME\",\"LAMBDA_NAME\":\"$LAMBDA_NAME\"}}"
 ROLE_ARN="$LAMBDA_ROLE_ARN"
+RUNTIME="python3.14"
 
 # Deploy or update Lambda
 if aws_cmd lambda get-function --function-name "$LAMBDA_NAME" >/dev/null 2>&1; then
@@ -31,24 +32,28 @@ if aws_cmd lambda get-function --function-name "$LAMBDA_NAME" >/dev/null 2>&1; t
     aws_cmd lambda update-function-code \
         --function-name "$LAMBDA_NAME" \
         --zip-file "fileb://$ZIP_FILE" >/dev/null
+    aws_cmd lambda wait function-updated-v2 --function-name "$LAMBDA_NAME"
 
-    log_info "updating lambda enviroment settings"
+    log_info "updating lambda runtime and environment settings"
     aws_cmd lambda update-function-configuration \
         --function-name "$LAMBDA_NAME" \
+        --runtime "$RUNTIME" \
         --environment "$ENV_JSON" >/dev/null
+    aws_cmd lambda wait function-updated-v2 --function-name "$LAMBDA_NAME"
 
     log_success "lambda code and enviroment settings updated"
 else
     log_info "creating lambda '$LAMBDA_NAME'..."
     aws_cmd lambda create-function \
         --function-name "$LAMBDA_NAME" \
-        --runtime python3.11 \
+        --runtime "$RUNTIME" \
         --handler handler.lambda_handler \
         --role "$ROLE_ARN" \
         --timeout 30 \
         --memory-size 256 \
         --zip-file "fileb://$ZIP_FILE" \
         --environment "$ENV_JSON" >/dev/null
+    aws_cmd lambda wait function-active-v2 --function-name "$LAMBDA_NAME"
 
     log_success "lambda created with enviroment variables"
 fi

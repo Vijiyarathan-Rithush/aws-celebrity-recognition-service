@@ -5,6 +5,8 @@
 import json
 import logging
 import os
+from urllib.parse import unquote_plus
+
 import boto3
 
 logger = logging.getLogger()
@@ -13,25 +15,30 @@ logger.setLevel(logging.INFO)
 s3 = boto3.client("s3")
 rekognition = boto3.client("rekognition")
 
-# From config.env
-OUT_BUCKET_NAME = os.environ.get("OUT_BUCKET_NAME")
-
-
 def lambda_handler(event, context):
-    logger.info("Event received: %s", json.dumps(event))
-
     records = event.get("Records", [])
     if not records:
         logger.warning("No S3 records found in event.")
         return {"statusCode": 400, "body": "No S3 records found"}
 
-    record = records[0]
-    s3_info = record.get("s3", {})
+    output_bucket = os.environ["OUT_BUCKET_NAME"]
+    output_keys = [process_record(record, output_bucket) for record in records]
+    return {
+        "statusCode": 200,
+        "body": json.dumps(
+            {
+                "message": "Celebrity detection complete",
+                "output_key": output_keys[0],
+                "output_keys": output_keys,
+            }
+        ),
+    }
 
-    bucket = s3_info.get("bucket", {}).get("name")
-    key = s3_info.get("object", {}).get("key")
 
-    logger.info("Processing file: s3://%s/%s", bucket, key)
+def process_record(record, output_bucket):
+    s3_info = record["s3"]
+    bucket = s3_info["bucket"]["name"]
+    key = unquote_plus(s3_info["object"]["key"])
 
     # Rekognition celebrity detection
     response = rekognition.recognize_celebrities(
@@ -52,25 +59,12 @@ def lambda_handler(event, context):
         "celebrities": celebrities,
     }
 
-    # Write JSON to: results/<filename>.json
-    base_name = key.split("/")[-1]
-    json_key = f"results/{base_name}.json"
-
-    logger.info("Writing result to s3://%s/%s", OUT_BUCKET_NAME, json_key)
-
+    json_key = f"results/{key}.json"
     s3.put_object(
-        Bucket=OUT_BUCKET_NAME,
+        Bucket=output_bucket,
         Key=json_key,
         Body=json.dumps(result, indent=2),
         ContentType="application/json",
     )
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps(
-            {
-                "message": "Celebrity detection complete",
-                "output_key": json_key,
-            }
-        ),
-    }
+    return json_key

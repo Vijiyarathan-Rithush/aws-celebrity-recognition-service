@@ -1,3 +1,4 @@
 *.env
 build/
 docs/protocols.md
+__pycache__/
